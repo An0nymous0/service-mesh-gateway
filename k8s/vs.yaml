@@ -4,7 +4,7 @@ metadata:
   name: service-mesh
 spec:
   hosts:
-    - "api.istio.io"
+    - "gateway.istio.io"
   gateways:
     - service-mesh-gateway
   http:
