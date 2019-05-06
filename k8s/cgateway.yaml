@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-mesh-gateway
+  labels:
+    app: service-mesh-gateway
+    service: service-mesh-gateway
+spec:
+  ports:
+    - port: 8082
+      name: http
+      targetPort: 8080
+  selector:
+    app: service-mesh-gateway
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: service-mesh-gateway-v1
+  labels:
+    app: service-mesh-gateway
+    version: v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-mesh-gateway
+        version: v1
+    spec:
+      containers:
+        - name: service-mesh-gateway
+          image: com.demo-service-mesh-gateway:latest
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx512m -Xms512m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Djava.security.egd=file:/dev/./urandom -Duser.timezone=GMT+08 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Duser.timezone=Asia/Shanghai"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
